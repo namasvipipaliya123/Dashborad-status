@@ -1,0 +1,208 @@
+/* Main App */
+.App {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #85006b, #b10088, #f43397);
+  min-height: 100vh;
+  padding-top: 90px;
+  text-align: center;
+  color: #fff;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #b10088, #f43397);
+  color: white;
+  padding: 18px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease;
+}
+
+.navbar-logo {
+  font-size: 30px;
+  font-weight: 800;
+  background: linear-gradient(to right, #ffe2f1, #ffc6ec);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navbar-links a {
+  color: #ffe2f1;
+  text-decoration: none;
+  margin-left: 25px;
+  font-weight: 600;
+  font-size: 16px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #fff;
+  transition: width 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: #fff;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
+/* Headings */
+h1 {
+  font-size: 36px;
+  margin: 30px 0;
+  font-weight: 800;
+  background: linear-gradient(to right, #ffe2f1, #ffccf5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Status Boxes */
+.status-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  padding: 0 20px;
+  margin-bottom: 50px;
+}
+
+.box {
+  flex: 1 1 240px;
+  background: linear-gradient(135deg, #ffe8f7, #fbd3ec);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #5a5a5a;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  max-width: 240px;
+  position: relative;
+  overflow: hidden;
+}
+
+.box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.box span {
+  display: block;
+  font-size: 40px;
+  color: #111;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* Status Types (Top Gradient Bars) */
+.delivered::before,
+.shipped::before,
+.buy::before,
+.rto::before,
+.return::before {
+  content: '';
+  height: 6px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.delivered::before { background: linear-gradient(to right, #4caf50, #81c784); }
+.shipped::before   { background: linear-gradient(to right, #2196f3, #64b5f6); }
+
+
+/* Upload Section */
+.upload-section {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+input[type="file"] {
+  padding: 12px;
+  border: 2px dashed #ffe2f1;
+  border-radius: 12px;
+  font-size: 14px;
+  background-color: #fff;
+  transition: border 0.3s ease;
+}
+
+input[type="file"]:hover {
+  border-color: #ff007f;
+}
+
+/* Button */
+button {
+  padding: 12px 28px;
+  background: linear-gradient(to right, #ff007f, #ff85c1);
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: linear-gradient(to right, #cc0066, #e76ea9);
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .status-boxes {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .box {
+    max-width: 90%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-links {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-links a {
+    display: block;
+    margin: 8px 0;
+  }
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: bold;
+  background: linear-gradient(to right, #ffeb3b, #ffc107);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 15px;
+}

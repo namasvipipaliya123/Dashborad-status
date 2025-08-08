@@ -1,0 +1,7 @@
+order_id,customer_name,status
+1,Aman,pending
+2,Ravi,deliver
+3,Sita,return
+4,Neha,cancel
+5,Raj,pending
+6,Ali,deliver
