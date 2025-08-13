@@ -7,13 +7,26 @@ const statusList = [
   "rto_locked",
   "ready_to_ship",
   "shipped",
-  "rto_initiated"
+  "rto_initiated",
+  "supplier_listed_price",
+  "supplier_discounted_price"
 ];
 
-function parseNumber(value) {
+function parsePrice(value) {
   if (!value) return 0;
-  let num = parseFloat(value.toString().replace(/,/g, '').trim());
-  return isNaN(num) ? 0 : num;
+  let clean = value.toString().trim().replace(/[^0-9.\-]/g, '');
+  return parseFloat(clean) || 0;
+}
+
+function getColumnValue(row, possibleNames) {
+  const keys = Object.keys(row).map(k => k.toLowerCase().trim());
+  for (let name of possibleNames) {
+    let idx = keys.indexOf(name.toLowerCase().trim());
+    if (idx !== -1) {
+      return row[Object.keys(row)[idx]];
+    }
+  }
+  return 0;
 }
 
 function categorizeRows(rows) {
@@ -23,19 +36,28 @@ function categorizeRows(rows) {
   });
   categories.other = [];
 
-  let totalListedPrice = 0;
-  let totalDiscountedPrice = 0;
+  let totalSupplierListedPrice = 0;
+  let totalSupplierDiscountedPrice = 0;
 
   rows.forEach(row => {
     const status = (row['Reason for Credit Entry'] || '').toLowerCase().trim();
-
-    const listedPrice = parseNumber(row['Supplier Listed Price (Incl. GST + Commission)']);
-    const discountedPrice = parseNumber(row['Supplier Discounted Price (Incl GST and Commision)']);
-
-    totalListedPrice += listedPrice;
-    totalDiscountedPrice += discountedPrice;
-
     categories["all"].push(row);
+
+    const listedPrice = parsePrice(getColumnValue(row, [
+      'Supplier Listed Price (Incl. GST + Commission)',
+      'Supplier Listed Price',
+      'Listed Price'
+    ]));
+
+    const discountedPrice = parsePrice(getColumnValue(row, [
+      'Supplier Discounted Price (Incl GST and Commission)', 
+      'Supplier Discounted Price (Incl GST and Commision)',  
+      'Supplier Discounted Price',
+      'Discounted Price'
+    ]));
+
+    totalSupplierListedPrice += listedPrice;
+    totalSupplierDiscountedPrice += discountedPrice;
 
     let matched = false;
     statusList.forEach(s => {
@@ -50,13 +72,16 @@ function categorizeRows(rows) {
     }
   });
 
-  return {
-    categories,
-    totals: {
-      totalListedPrice,
-      totalDiscountedPrice
-    }
+  categories.totals = {
+    totalSupplierListedPrice,
+    totalSupplierDiscountedPrice
   };
+
+  return categories;
 }
 
-module.exports = categorizeRows;
+module.exports = {
+  categorizeRows,
+  parsePrice,
+  getColumnValue
+};
