@@ -22,6 +22,9 @@ function App() {
     totalSupplierDiscountedPrice: 0
   });
 
+  const [profit, setProfit] = useState(0);
+  const [profitPercent, setProfitPercent] = useState(0);
+
   const [dragActive, setDragActive] = useState(false);
   const [showFilteredView, setShowFilteredView] = useState(false);
 
@@ -79,6 +82,8 @@ function App() {
       });
 
       const result = res.data;
+      const totalListed = result.totals?.totalSupplierListedPrice || 0;
+      const totalDiscounted = result.totals?.totalSupplierDiscountedPrice || 0;
 
       setData({
         all: result.all?.length || 0,
@@ -91,9 +96,17 @@ function App() {
         shipped: result.shipped?.length || 0,
         rto_initiated: result.rto_initiated?.length || 0,
         other: result.other?.length || 0,
-        totalSupplierListedPrice: result.totals?.totalSupplierListedPrice || 0,
-        totalSupplierDiscountedPrice: result.totals?.totalSupplierDiscountedPrice || 0
+        totalSupplierListedPrice: totalListed,
+        totalSupplierDiscountedPrice: totalDiscounted
       });
+
+      const calcProfit = totalListed - totalDiscounted;
+      const calcProfitPercent = totalDiscounted
+        ? (calcProfit / totalDiscounted) * 100
+        : 0;
+
+      setProfit(calcProfit);
+      setProfitPercent(calcProfitPercent.toFixed(2));
 
       setShowFilteredView(false);
     } catch (err) {
@@ -110,7 +123,20 @@ function App() {
 
     try {
       const res = await axios.get(`http://localhost:5000/filter/${subOrderNo}`);
+      const listed = res.data.listedPrice || 0;
+      const discounted = res.data.discountedPrice || 0;
+
       setFilterResult(res.data);
+
+      
+      const calcProfit = listed - discounted;
+      const calcProfitPercent = discounted
+        ? (calcProfit / discounted) * 100
+        : 0;
+
+      setProfit(calcProfit);
+      setProfitPercent(calcProfitPercent.toFixed(2));
+
       setShowFilteredView(true);
     } catch (err) {
       console.error("Filter failed", err);
@@ -188,6 +214,8 @@ function App() {
           <div className="box other">Other<br /><span>{data.other}</span></div>
           <div className="box other">Supplier Listed Total Price (Incl. GST + Commission)<br /><span>{data.totalSupplierListedPrice.toLocaleString()}</span></div>
           <div className="box other">Supplier Discounted Total Price (Incl GST and Commission)<br /><span>{data.totalSupplierDiscountedPrice.toLocaleString()}</span></div>
+          <div className="box other">Profit<br /><span>{profit.toLocaleString()}</span></div>
+          <div className="box other">Profit %<br /><span>{profitPercent}%</span></div>
         </div>
       ) : (
         filterResult && (
@@ -200,9 +228,16 @@ function App() {
               Supplier Discounted Price (Incl GST and Commission)<br />
               <span>{filterResult.discountedPrice.toLocaleString()}</span>
             </div>
+            <div className="box other">
+              Profit<br /><span>{profit.toLocaleString()}</span>
+            </div>
+            <div className="box other">
+              Profit %<br /><span>{profitPercent}%</span>
+            </div>
           </div>
         )
       )}
+
       <div
         className={`upload-section ${dragActive ? 'drag-active' : ''}`}
         onDrop={handleDrop}
@@ -218,6 +253,7 @@ function App() {
         {file && <p className="filename">Selected File: {file.name}</p>}
         <button onClick={handleUpload}>Upload File</button>
       </div>
+
       <div style={{ marginTop: "20px" }}>
         <button
           onClick={handleSubmitAll}
@@ -234,7 +270,6 @@ function App() {
           Submit All
         </button>
       </div>
-
     </div>
   );
 }

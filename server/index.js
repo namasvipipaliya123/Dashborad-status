@@ -5,6 +5,7 @@ const { connectDB } = require('./config/db');
 const uploadRoutes = require('./routes/uploadRoutes');
 const filterRoutes = require('./routes/filterRoutes');
 const submitRoutes = require('./routes/submitRoutes');
+const calculateRoutes = require('./routes/calculateRoutes');
 
 const app = express();
 const PORT = 5000;
@@ -17,7 +18,7 @@ connectDB();
 app.use('/', uploadRoutes);
 app.use('/', filterRoutes);
 app.use('/', submitRoutes);
-
+app.use('/', calculateRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
