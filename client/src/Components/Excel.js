@@ -23,7 +23,7 @@ function App() {
   });
 
   const [dragActive, setDragActive] = useState(false);
-  const [showFilteredView, setShowFilteredView] = useState(false); // NEW STATE
+  const [showFilteredView, setShowFilteredView] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files?.[0];
@@ -95,7 +95,7 @@ function App() {
         totalSupplierDiscountedPrice: result.totals?.totalSupplierDiscountedPrice || 0
       });
 
-      setShowFilteredView(false); // Reset to normal view after upload
+      setShowFilteredView(false);
     } catch (err) {
       console.error('Upload failed', err);
       alert('Upload failed');
@@ -111,10 +111,22 @@ function App() {
     try {
       const res = await axios.get(`http://localhost:5000/filter/${subOrderNo}`);
       setFilterResult(res.data);
-      setShowFilteredView(true); // Switch to filtered view
+      setShowFilteredView(true);
     } catch (err) {
       console.error("Filter failed", err);
       alert("No matching sub order found");
+    }
+  };
+
+  const handleSubmitAll = async () => {
+    try {
+      const res = await axios.post("http://localhost:5000/submit-all", data, {
+        headers: { "Content-Type": "application/json" },
+      });
+      alert(res.data.message || "All data submitted successfully!");
+    } catch (err) {
+      console.error("Submit all failed", err);
+      alert("Failed to submit all data");
     }
   };
 
@@ -124,13 +136,33 @@ function App() {
         <div className="navbar-logo">Meesho</div>
 
         <div className="navbar-search">
-          <input 
-            type="search" 
-            placeholder="Add here Sub Order No" 
+          <input
+            type="search"
+            placeholder="Add here Sub Order No"
             value={subOrderNo}
             onChange={(e) => setSubOrderNo(e.target.value)}
           />
           <button className="filter-btn" onClick={handleFilter}>Filter</button>
+
+          {showFilteredView && (
+            <button
+              className="back-btn"
+              onClick={() => setShowFilteredView(false)}
+              style={{
+                marginLeft: '8px',
+                padding: '4px 8px',
+                fontSize: '12px',
+                backgroundColor: '#ccc',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                height: "38px",
+                width: "60px"
+              }}
+            >
+              Back
+            </button>
+          )}
         </div>
 
         <div className="navbar-links">
@@ -144,56 +176,18 @@ function App() {
 
       {!showFilteredView ? (
         <div className="status-boxes">
-          <div className="box all">
-            All<br />
-            <span>{data.all}</span>
-          </div>
-          <div className="box rto_complete">
-            RTO Complete<br />
-            <span>{data.rto_complete}</span>
-          </div>
-          <div className="box door_step_exchanged">
-            Door Step Exchanged<br />
-            <span>{data.door_step_exchanged}</span>
-          </div>
-          <div className="box delivered">
-            Delivered<br />
-            <span>{data.delivered}</span>
-          </div>
-          <div className="box cancelled">
-            Cancelled<br />
-            <span>{data.cancelled}</span>
-          </div>
-          <div className="box rto_locked">
-            RTO Locked<br />
-            <span>{data.rto_locked}</span>
-          </div>
-          <div className="box ready_to_ship">
-            Pending<br />
-            <span>{data.ready_to_ship}</span>
-          </div>
-          <div className="box shipped">
-            Shipped<br />
-            <span>{data.shipped}</span>
-          </div>
-          <div className="box rto_initiated">
-            RTO Initiated<br />
-            <span>{data.rto_initiated}</span>
-          </div>
-          <div className="box other">
-            Other<br />
-            <span>{data.other}</span>
-          </div>
-
-          <div className="box other">
-            Supplier Listed Total Price (Incl. GST + Commission)<br />
-            <span>{data.totalSupplierListedPrice.toLocaleString()}</span>
-          </div>
-
-          <div className="box other">
-            Supplier Discounted Total Price (Incl GST and Commission)<br />
-            <span>{data.totalSupplierDiscountedPrice.toLocaleString()}</span>
-          </div>
+          <div className="box all">All<br /><span>{data.all}</span></div>
+          <div className="box rto_complete">RTO Complete<br /><span>{data.rto_complete}</span></div>
+          <div className="box door_step_exchanged">Door Step Exchanged<br /><span>{data.door_step_exchanged}</span></div>
+          <div className="box delivered">Delivered<br /><span>{data.delivered}</span></div>
+          <div className="box cancelled">Cancelled<br /><span>{data.cancelled}</span></div>
+          <div className="box rto_locked">RTO Locked<br /><span>{data.rto_locked}</span></div>
+          <div className="box ready_to_ship">Pending<br /><span>{data.ready_to_ship}</span></div>
+          <div className="box shipped">Shipped<br /><span>{data.shipped}</span></div>
+          <div className="box rto_initiated">RTO Initiated<br /><span>{data.rto_initiated}</span></div>
+          <div className="box other">Other<br /><span>{data.other}</span></div>
+          <div className="box other">Supplier Listed Total Price (Incl. GST + Commission)<br /><span>{data.totalSupplierListedPrice.toLocaleString()}</span></div>
+          <div className="box other">Supplier Discounted Total Price (Incl GST and Commission)<br /><span>{data.totalSupplierDiscountedPrice.toLocaleString()}</span></div>
         </div>
       ) : (
         filterResult && (
@@ -209,7 +203,6 @@ function App() {
           </div>
         )
       )}
-
       <div
         className={`upload-section ${dragActive ? 'drag-active' : ''}`}
         onDrop={handleDrop}
@@ -225,6 +218,23 @@ function App() {
         {file && <p className="filename">Selected File: {file.name}</p>}
         <button onClick={handleUpload}>Upload File</button>
       </div>
+      <div style={{ marginTop: "20px" }}>
+        <button
+          onClick={handleSubmitAll}
+          style={{
+            backgroundColor: "#28a745",
+            color: "#fff",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "14px"
+          }}
+        >
+          Submit All
+        </button>
+      </div>
+
     </div>
   );
 }

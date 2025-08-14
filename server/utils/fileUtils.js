@@ -41,6 +41,7 @@ function categorizeRows(rows) {
 
   rows.forEach(row => {
     const status = (row['Reason for Credit Entry'] || '').toLowerCase().trim();
+
     categories["all"].push(row);
 
     const listedPrice = parsePrice(getColumnValue(row, [
@@ -50,8 +51,8 @@ function categorizeRows(rows) {
     ]));
 
     const discountedPrice = parsePrice(getColumnValue(row, [
-      'Supplier Discounted Price (Incl GST and Commission)', 
-      'Supplier Discounted Price (Incl GST and Commision)',  
+      'Supplier Discounted Price (Incl GST and Commission)',
+      'Supplier Discounted Price (Incl GST and Commision)',
       'Supplier Discounted Price',
       'Discounted Price'
     ]));
@@ -80,8 +81,4 @@ function categorizeRows(rows) {
   return categories;
 }
 
-module.exports = {
-  categorizeRows,
-  parsePrice,
-  getColumnValue
-};
+module.exports = { parsePrice, getColumnValue, categorizeRows, statusList };

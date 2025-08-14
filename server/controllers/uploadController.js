@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const XLSX = require('xlsx');
 const csv = require('csv-parser');
-const { categorizeRows, parsePrice, getColumnValue } = require('../utils/categorizeRows');
+const { categorizeRows, parsePrice, getColumnValue } = require('../utils/fileUtils');
 
 let uploadedData = [];
 
@@ -60,8 +60,8 @@ exports.filterBySubOrder = (req, res) => {
   ]));
 
   const discountedPrice = parsePrice(getColumnValue(match, [
-    'Supplier Discounted Price (Incl GST and Commission)', 
-    'Supplier Discounted Price (Incl GST and Commision)',  
+    'Supplier Discounted Price (Incl GST and Commission)',
+    'Supplier Discounted Price (Incl GST and Commision)',
     'Supplier Discounted Price',
     'Discounted Price'
   ]));
