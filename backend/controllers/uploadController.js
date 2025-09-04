@@ -11,7 +11,6 @@ async function saveToDB(rows, res) {
     return res.status(400).json({ message: "No data to save" });
 
   const categorized = categorizeRows(rows);
-
   try {
     await db.collection("dashboard_data").insertOne({
       submittedAt: new Date(),

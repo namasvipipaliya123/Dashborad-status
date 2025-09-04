@@ -4,7 +4,6 @@ const { parsePrice, getColumnValue } = require("../utils/parser");
 const filterBySubOrderNo = async (req, res) => {
   const subOrderNo = req.params.subOrderNo.trim().toLowerCase();
   if (!subOrderNo) return res.status(400).json({ error: "Sub Order No required" });
-
   try {
     const db = getDB();
     const result = await db
