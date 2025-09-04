@@ -6,18 +6,15 @@ let db;
 async function connectDB() {
   try {
     const client = await MongoClient.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      ssl: true,
       tls: true,
-      tlsAllowInvalidCertificates: false,
+      tlsAllowInvalidCertificates: false, // only accept valid certs
     });
 
     db = client.db(process.env.DB_NAME);
-    console.log(" Connected to MongoDB");
+    console.log("✅ Connected to MongoDB");
     return db;
   } catch (err) {
-    console.error(" MongoDB connection failed:", err.message);
+    console.error("❌ MongoDB connection failed:", err.message);
     process.exit(1);
   }
 }
