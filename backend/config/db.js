@@ -1,6 +1,5 @@
 const { MongoClient } = require("mongodb");
 
-const MONGO_URI = "mongodb+srv://pipaliyanamasvi:dashboard@dashboard.qk6clff.mongodb.net/?retryWrites=true&w=majority&appName=dashboard";
 const DB_NAME = "dashboard_db";
 let db;
 
