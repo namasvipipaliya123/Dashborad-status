@@ -11,14 +11,14 @@ async function connectDB() {
       useUnifiedTopology: true,
       ssl: true,
       tls: true,
-      tlsAllowInvalidCertificates: false, // strict TLS
+      tlsAllowInvalidCertificates: false,
     });
 
     db = client.db(process.env.DB_NAME);
-    console.log("✅ Connected to MongoDB");
+    console.log(" Connected to MongoDB");
     return db;
   } catch (err) {
-    console.error("❌ MongoDB connection failed:", err.message);
+    console.error(" MongoDB connection failed:", err.message);
     process.exit(1);
   }
 }
