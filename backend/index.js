@@ -20,8 +20,30 @@ app.use("/upload", uploadRoutes);
 app.use("/filter", filterRoutes);
 app.use("/calculate", calculateRoutes);
 app.use("/download", downloadRoutes);
-app.get("/", (req, res) => {
-  res.send("🚀 API is running... Use /upload, /filter, /calculate, /download");
+app.get("/", async (req, res) => {
+  try {
+
+    const db = require("./config/db").getDB(); // make sure DB connected
+    const uploadCollection = db.collection("uploads"); 
+    const filterCollection = db.collection("filters");
+    const calculateCollection = db.collection("calculations");
+
+    const uploadCount = await uploadCollection.countDocuments();
+    const filterCount = await filterCollection.countDocuments();
+    const calculateCount = await calculateCollection.countDocuments();
+
+    res.json({
+      message: " API is running...",
+      summary: {
+        totalUploads: uploadCount,
+        totalFilters: filterCount,
+        totalCalculations: calculateCount,
+      },
+      routes: ["/upload", "/filter", "/calculate", "/download"],
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch API summary" });
+  }
 });
 
 app.listen(PORT, () =>
