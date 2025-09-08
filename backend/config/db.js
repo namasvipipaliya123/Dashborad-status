@@ -5,11 +5,13 @@ let db;
  
 async function connectDB() {
   try {
-    const client = await MongoClient.connect(process.env.MONGO_URI, {
-      tls: true,
-      tlsAllowInvalidCertificates: false, 
+ const client = await MongoClient.connect(process.env.MONGO_URI, {
+      serverApi: {
+        version: '1',
+        strict: true,
+        deprecationErrors: true,
+      },
     });
-
     db = client.db(process.env.DB_NAME);
     console.log("Connected to MongoDB");
     return db;
