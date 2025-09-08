@@ -3,7 +3,6 @@ const cors = require("cors");
 const { connectDB } = require("./config/db");
 const dotenv = require("dotenv");
 dotenv.config();
-
 const uploadRoutes = require("./routes/uploadRoutes");
 const filterRoutes = require("./routes/filterRoutes");
 const calculateRoutes = require("./routes/calculateRoutes");
