@@ -11,6 +11,8 @@ const downloadRoutes = require("./routes/downloadRoutes");
 const app = express();
 const PORT = 5000;
 
+connectDB();
+
 app.use(cors());
 app.use(express.json());
 
@@ -21,5 +23,4 @@ app.use("/download", downloadRoutes);
 
 app.listen(PORT, () =>
   console.log(` Server running on http://localhost:${PORT}`)
-
 );
