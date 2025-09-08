@@ -6,8 +6,10 @@ let db;
 async function connectDB() {
   try {
  const client = await MongoClient.connect(process.env.MONGO_URI, {
+      ssl: true,
+      tlsAllowInvalidCertificates: true, 
       serverApi: {
-        version: '1',
+        version: ServerApiVersion.v1, 
         strict: true,
         deprecationErrors: true,
       },
